@@ -1,6 +1,5 @@
 from enum import unique
 from lib2to3.pytree import Base
-from tkinter import CASCADE
 from sqlalchemy import TIMESTAMP, Column, Integer, String, Boolean, ForeignKey
 from sqlalchemy.sql.expression import text
 from sqlalchemy.orm import relationship
