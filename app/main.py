@@ -10,6 +10,8 @@ from.routers import vote, user, reputation, post, idea, auth, comment
 
 app = FastAPI()
 
+models.Base.metadata.create_all(bind=engine)
+
 # domains that can access our api
 origins = ['https://www.google.com']
 
