@@ -8,5 +8,7 @@ jobs:
     steps:
       - name: pulling git repo
         uses: actions/checkout@v3
-      - name: say hi to robert
-        run: echo "hello robert"
+      - name: Install Python version 3.9
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.9'
