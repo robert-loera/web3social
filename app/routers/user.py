@@ -1,6 +1,7 @@
 from typing import List, Optional
 from fastapi import APIRouter, HTTPException, status, Depends
-from .. import schemas, utils, models
+import fastapi
+from .. import schemas, utils, models, oauth2
 from sqlalchemy.orm import Session
 from ..database import get_db
 from sqlalchemy import func
@@ -24,6 +25,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_user)
     new_user.total_posts = 0
+    # need to return a token
     return new_user
 
 
@@ -33,7 +35,10 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 @router.get("/{id}", response_model=schemas.UserOut)
 def get_user(id: int, db: Session = Depends(get_db)):
     # query to get user
-    user = db.query(models.User).filter(models.User.id == id).first()
+    user = db.query(models.User.id, models.User.username, models.User.created_at, func.count(models.Post.id).
+                    label("total_posts")).join(
+        models.Post, models.User.id == models.Post.owner_id,
+        isouter=True).group_by(models.User.id).filter(models.User.id == id).first()
 
     # if user dne raise error
     if user is None:
@@ -43,11 +48,24 @@ def get_user(id: int, db: Session = Depends(get_db)):
     return user
 
 
+'''router to get the current logged in user'''
+
+
+@router.get("me", response_model=schemas.UserOut)
+async def get_current_user(current_user: int = Depends(oauth2.get_current_user), db: Session = Depends(get_db)):
+    user = db.query(models.User.id, models.User.username, models.User.created_at, func.count(models.Post.id).
+                    label("total_posts")).join(
+        models.Post, models.User.id == models.Post.owner_id,
+        isouter=True).group_by(models.User.id).filter(models.User.id == current_user.id).first()
+    print(current_user)
+    return user
+
+
 '''router to get all users'''
 
 
-# @router.get("/", response_model=List[schemas.UserOut])
-@router.get("/")
+@router.get("/", response_model=List[schemas.UserOut])
+# @router.get("/")
 def get_users(db: Session = Depends(get_db), limit: int = 25, search: Optional[str] = ""):
     # query all users w option of a limit
     users = db.query(models.User.id, models.User.username, models.User.created_at, func.count(models.Post.id).

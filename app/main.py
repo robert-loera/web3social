@@ -13,7 +13,7 @@ app = FastAPI()
 models.Base.metadata.create_all(bind=engine)
 
 # domains that can access our api
-origins = ['https://www.google.com']
+origins = ['*']
 
 
 # basically a function that is run before every request
