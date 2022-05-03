@@ -6,7 +6,8 @@ jobs:
   build_out:
     runs-on: ubuntu-latest
     steps:
-      - name: run the pytest file
+      - name: checkout code
+        uses: actions/checkout@v3
 # jobs:
 #   build:
 #     environment:
