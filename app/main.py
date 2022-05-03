@@ -13,7 +13,8 @@ app = FastAPI()
 models.Base.metadata.create_all(bind=engine)
 
 # domains that can access our api
-origins = ['*']
+origins = ['http://localhost:3000',
+           'http://192.168.1.107:3000']
 
 
 # basically a function that is run before every request
@@ -36,4 +37,4 @@ app.include_router(comment.router)
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World my name is Robert"}
+    return {"message": "Web3 Social"}
