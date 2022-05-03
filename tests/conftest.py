@@ -1,5 +1,3 @@
-import pytest
-from app.oauth2 import create_access_token
 from fastapi.testclient import TestClient
 import pytest
 from sqlalchemy import create_engine
