@@ -14,7 +14,9 @@ models.Base.metadata.create_all(bind=engine)
 
 # domains that can access our api
 origins = ['http://localhost:3000',
-           'http://192.168.1.107:3000']
+           'http://192.168.1.107:3000',
+           'https://web3socials.herokuapp.com/',
+           'https://web3socials.herokuapp.com']
 
 
 # basically a function that is run before every request
