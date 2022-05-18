@@ -32,18 +32,18 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 '''router to get a users info with specified id'''
 
 
-@router.get("/{id}", response_model=schemas.UserOut)
-def get_user(id: int, db: Session = Depends(get_db)):
+@router.get("/{username}", response_model=schemas.UserOut)
+def get_user(username: str, db: Session = Depends(get_db)):
     # query to get user
     user = db.query(models.User.id, models.User.username, models.User.created_at, func.count(models.Post.id).
                     label("total_posts")).join(
         models.Post, models.User.id == models.Post.owner_id,
-        isouter=True).group_by(models.User.id).filter(models.User.id == id).first()
+        isouter=True).group_by(models.User.id).filter(models.User.username == username).first()
 
     # if user dne raise error
     if user is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f'user with id {id} does not exist')
+                            detail=f'user {username} does not exist')
 
     return user
 
