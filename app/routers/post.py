@@ -1,3 +1,4 @@
+from ntpath import join
 from typing import List, Optional
 from fastapi import APIRouter, Response, status, Depends, HTTPException
 from ..database import get_db
@@ -56,6 +57,18 @@ def get_post(id: int, db: Session = Depends(get_db), current_user: int = Depends
                             detail=f'Post with id {id} was not found')
 
     return post
+
+
+'''route to get all of a specified useres posts'''
+
+
+@router.get("of/{id}", response_model=List[schemas.PostOut])
+def get_users_post(id: str, db: Session = Depends(get_db)):
+    # query the users posts
+    posts = db.query(models.Post, func.count(models.Vote.post_id).label("votes")).join(
+        models.Vote, models.Vote.post_id == models.Post.id, isouter=True).group_by(models.Post.id).filter(models.Post.owner_id == id).all()
+
+    return posts
 
 
 '''route to delete a post with specified id'''
