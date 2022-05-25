@@ -17,7 +17,7 @@ router = APIRouter(
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.Post)
 def create_post(post: schemas.PostCreate, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     # create post with current logged in user as owner and pass post info as dict
-    new_post = models.Post(owner_id=current_user.id, **post.dict())
+    new_post = models.Post(owner_username=current_user.username, **post.dict())
     db.add(new_post)
     db.commit()
     db.refresh(new_post)
@@ -62,13 +62,13 @@ def get_post(id: int, db: Session = Depends(get_db), current_user: int = Depends
 '''route to get all of a specified useres posts'''
 
 
-@router.get("of/{id}", response_model=List[schemas.PostOut])
-def get_users_post(id: str, db: Session = Depends(get_db)):
+@router.get("of/{username}", response_model=List[schemas.PostOut])
+def get_users_post(username: str, db: Session = Depends(get_db)):
     # query the users posts
-    posts = db.query(models.Post, func.count(models.Vote.post_id).label("votes")).join(
-        models.Vote, models.Vote.post_id == models.Post.id, isouter=True).group_by(models.Post.id).filter(models.Post.owner_id == id).all()
+    post = db.query(models.Post, func.count(models.Vote.post_id).label("votes")).join(
+        models.Vote, models.Vote.post_id == models.Post.id, isouter=True).group_by(models.Post.id).filter(models.Post.owner_username == username).all()
 
-    return posts
+    return post
 
 
 '''route to delete a post with specified id'''

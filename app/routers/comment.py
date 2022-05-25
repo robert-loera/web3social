@@ -23,9 +23,16 @@ def create_comment(comment: schemas.Comment, db: Session = Depends(get_db), curr
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f'post with id {comment.post_id} was not found')
 
+    poster_username = db.query(models.Post.owner_username).filter(
+        models.Post.id == comment.post_id).first()
+    poster_username = str(poster_username)
+    poster_username = poster_username.replace(
+        '(', '').replace(')', '').replace(',', '').replace("'", '')
+    print(poster_username)
+
     # if post exists add to db
     new_comment = models.Comment(
-        username=current_user.username, **comment.dict())
+        username=current_user.username, **comment.dict(), post_owner=poster_username)
 
     new_comment.post = db.query(models.Post).filter(
         new_comment.post_id == models.Post.id).first()

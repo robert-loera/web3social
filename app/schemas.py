@@ -39,19 +39,11 @@ class PostCreate(PostBase):
     pass
 
 
-class UserName(BaseModel):
-    username: str
-
-    class Config:
-        orm_mode = True
-
-
 class Post(PostBase):
     # inherits post contents from PostBase
     id: int
     created_at: datetime
-    owner_id: int
-    owner: UserName
+    owner_username: str
 
     class Config:
         orm_mode = True

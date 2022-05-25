@@ -20,8 +20,15 @@ def vote(vote: schemas.PostVote, db: Session = Depends(database.get_db), current
             status_code=status.HTTP_404_NOT_FOUND, detail="Post does not exist")
     # check if vote already exists
     vote_query = db.query(models.Vote).filter(
-        models.Vote.post_id == vote.post_id, models.Vote.user_id == current_user.id)
+        models.Vote.post_id == vote.post_id, models.Vote.username == current_user.username)
     found_vote = vote_query.first()
+
+    poster_username = db.query(models.Post.owner_username).filter(
+        models.Post.id == vote.post_id).first()
+    poster_username = str(poster_username)
+    poster_username = poster_username.replace(
+        '(', '').replace(')', '').replace(',', '').replace("'", '')
+    print(poster_username)
 
     # user upvotes a post
     if (vote.dir == 1):
@@ -30,7 +37,8 @@ def vote(vote: schemas.PostVote, db: Session = Depends(database.get_db), current
             raise HTTPException(status_code=status.HTTP_409_CONFLICT,
                                 detail=f'user {current_user.id} has already voted on post {vote.post_id}')
         # if the user has not already liked the post than we create one
-        new_vote = models.Vote(post_id=vote.post_id, user_id=current_user.id)
+        new_vote = models.Vote(post_id=vote.post_id,
+                               username=current_user.username, post_owner=poster_username)
         db.add(new_vote)
         db.commit()
         db.refresh(new_vote)

@@ -16,8 +16,8 @@ class Post(Base):
     published = Column(Boolean, server_default='True',  nullable=False)
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text('now()'))
-    owner_id = Column(Integer, ForeignKey(
-        "users.id", ondelete="CASCADE"), nullable=False)
+    owner_username = Column(String, ForeignKey(
+        "users.username", ondelete="CASCADE"), nullable=False)
     owner = relationship("User")
 
 
@@ -33,10 +33,13 @@ class User(Base):
 
 class Vote(Base):
     __tablename__ = "votes"
-    user_id = Column(Integer, ForeignKey(
-        "users.id", ondelete='CASCADE'), primary_key=True)
+    username = Column(String, ForeignKey(
+        "users.username", ondelete='CASCADE'), primary_key=True)
     post_id = Column(Integer, ForeignKey(
         "posts.id", ondelete='CASCADE'), primary_key=True)
+    post_owner = Column(String, nullable=False)
+    created_at = Column(TIMESTAMP(timezone=True),
+                        nullable=False, server_default=text('now()'))
 
 
 class Comment(Base):
@@ -47,7 +50,10 @@ class Comment(Base):
         "users.username", ondelete='CASCADE'))
     post_id = Column(Integer, ForeignKey(
         "posts.id", ondelete='CASCADE'))
+    post_owner = Column(String, nullable=False)
     content = Column(String, nullable=False)
+    created_at = Column(TIMESTAMP(timezone=True),
+                        nullable=False, server_default=text('now()'))
 
 
 class Reputation(Base):
@@ -58,3 +64,5 @@ class Reputation(Base):
     reason = Column(String, nullable=True)
     profile = Column(String, ForeignKey(
         "users.username", ondelete='CASCADE'), primary_key=True)
+    created_at = Column(TIMESTAMP(timezone=True),
+                        nullable=False, server_default=text('now()'))

@@ -37,7 +37,7 @@ def get_user(username: str, db: Session = Depends(get_db)):
     # query to get user
     user = db.query(models.User.id, models.User.username, models.User.created_at, func.count(models.Post.id).
                     label("total_posts")).join(
-        models.Post, models.User.id == models.Post.owner_id,
+        models.Post, models.User.username == models.Post.owner_username,
         isouter=True).group_by(models.User.id).filter(models.User.username == username).first()
 
     # if user dne raise error
@@ -55,7 +55,7 @@ def get_user(username: str, db: Session = Depends(get_db)):
 async def get_current_user(current_user: int = Depends(oauth2.get_current_user), db: Session = Depends(get_db)):
     user = db.query(models.User.id, models.User.username, models.User.created_at, func.count(models.Post.id).
                     label("total_posts")).join(
-        models.Post, models.User.id == models.Post.owner_id,
+        models.Post, models.User.username == models.Post.owner_username,
         isouter=True).group_by(models.User.id).filter(models.User.id == current_user.id).first()
     print(current_user)
     return user
