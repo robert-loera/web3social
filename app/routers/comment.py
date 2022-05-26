@@ -32,7 +32,7 @@ def create_comment(comment: schemas.Comment, db: Session = Depends(get_db), curr
 
     # if post exists add to db
     new_comment = models.Comment(
-        username=current_user.username, **comment.dict(), post_owner=poster_username)
+        username=current_user.username, **comment.dict(), post_owner=poster_username, type='comment')
 
     new_comment.post = db.query(models.Post).filter(
         new_comment.post_id == models.Post.id).first()

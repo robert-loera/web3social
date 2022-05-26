@@ -38,7 +38,7 @@ def vote(vote: schemas.PostVote, db: Session = Depends(database.get_db), current
                                 detail=f'user {current_user.id} has already voted on post {vote.post_id}')
         # if the user has not already liked the post than we create one
         new_vote = models.Vote(post_id=vote.post_id,
-                               username=current_user.username, post_owner=poster_username)
+                               username=current_user.username, post_owner=poster_username, type='vote')
         db.add(new_vote)
         db.commit()
         db.refresh(new_vote)

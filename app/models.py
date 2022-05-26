@@ -33,6 +33,7 @@ class User(Base):
 
 class Vote(Base):
     __tablename__ = "votes"
+    type = Column(String, nullable=False)
     username = Column(String, ForeignKey(
         "users.username", ondelete='CASCADE'), primary_key=True)
     post_id = Column(Integer, ForeignKey(
@@ -44,7 +45,7 @@ class Vote(Base):
 
 class Comment(Base):
     __tablename__ = "comments"
-
+    type = Column(String, nullable=False)
     comment_id = Column(Integer, primary_key=True, nullable=False)
     username = Column(String, ForeignKey(
         "users.username", ondelete='CASCADE'))
@@ -58,6 +59,7 @@ class Comment(Base):
 
 class Reputation(Base):
     __tablename__ = "reputation"
+    type = Column(String, nullable=False)
     username = Column(String, ForeignKey(
         "users.username", ondelete='CASCADE'), primary_key=True)
     direction = Column(Integer, nullable=False)

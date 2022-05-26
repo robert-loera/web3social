@@ -35,7 +35,8 @@ def reputation(rep: schemas.Reputation, db: Session = Depends(database.get_db), 
                             detail=f'user {current_user.username} has already given rep to {rep.profile}')
 
     # if a duplicate does not exist than we rep post
-    new_rep = models.Reputation(username=current_user.username, **rep.dict())
+    new_rep = models.Reputation(
+        username=current_user.username, **rep.dict(), type='rep')
     db.add(new_rep)
     db.commit()
     db.refresh(new_rep)

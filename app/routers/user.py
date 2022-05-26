@@ -70,7 +70,7 @@ def get_users(db: Session = Depends(get_db), limit: int = 25, search: Optional[s
     # query all users w option of a limit
     users = db.query(models.User.id, models.User.username, models.User.created_at, func.count(models.Post.id).
                      label("total_posts")).join(
-        models.Post, models.User.id == models.Post.owner_id,
+        models.Post, models.User.username == models.Post.owner_username,
         isouter=True).group_by(models.User.id).all()
 
     return (users)
