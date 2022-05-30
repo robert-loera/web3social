@@ -32,7 +32,7 @@ def get_posts(db: Session = Depends(get_db), limit: int = 25, search: Optional[s
 
     # query to get the post and number of votes
     results = db.query(models.Post, func.count(models.Vote.post_id).label("votes"), func.count(models.Post.content).label("total_posts")).join(
-        models.Vote, models.Vote.post_id == models.Post.id, isouter=True).group_by(models.Post.id).all()
+        models.Vote, models.Vote.post_id == models.Post.id, isouter=True).group_by(models.Post.id).order_by(models.Post.created_at).all()
 
     return results
 
