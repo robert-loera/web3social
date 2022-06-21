@@ -4,7 +4,7 @@ from . import models
 from .database import engine
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from.routers import vote, user, reputation, post, idea, auth, comment, notifications
+from.routers import vote, user, reputation, post, idea, auth, comment, notifications, message
 
 # this is for the sql alchemy to create the tables in postgres
 # dont need when we use alembic
@@ -38,6 +38,7 @@ app.include_router(reputation.router)
 app.include_router(auth.router)
 app.include_router(comment.router)
 app.include_router(notifications.router)
+app.include_router(message.router)
 
 
 @app.get("/")

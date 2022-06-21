@@ -68,3 +68,18 @@ class Reputation(Base):
         "users.username", ondelete='CASCADE'), primary_key=True)
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text('now()'))
+
+
+class Message(Base):
+    __tablename__ = "messages"
+    message_id = Column(Integer, primary_key=True, nullable=False)
+    sender = Column(String, nullable=False)
+    content = Column(String, nullable=False)
+    receiver = Column(String, nullable=False)
+    created_at = Column(TIMESTAMP(timezone=True),
+                        nullable=False, server_default=text('now()'))
+
+
+# create route for messages between a specified user when clicked in front end
+
+# create route to view in messages tab that only shows people we have chats with

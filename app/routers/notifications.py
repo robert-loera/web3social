@@ -3,7 +3,7 @@ import sqlalchemy
 from sqlalchemy.orm import Session
 from ..import schemas, database, models, oauth2
 from ..database import get_db
-from sqlalchemy import func
+from sqlalchemy import func, desc
 from sqlalchemy.sql.functions import coalesce
 from sqlalchemy.sql import text
 
@@ -26,8 +26,8 @@ def notification(db: Session = Depends(database.get_db), current_user: int = Dep
     query3 = db.query(models.Comment.type, models.Comment.username, sqlalchemy.null(
     ), models.Comment.post_owner, models.Comment.post_id, models.Comment.content, models.Comment.created_at).filter(current_user.username == models.Comment.post_owner)
 
-    query = query1.union(query2, query3).order_by(
-        models.Comment.created_at).all()
+    query = query1.union(query2, query3).order_by(desc(
+        models.Comment.created_at)).all()
 
     print(query)
     return query

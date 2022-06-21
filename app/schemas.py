@@ -91,3 +91,9 @@ class Reputation(BaseModel):
     direction: conint(ge=-1, le=1)
     reason: str
     profile: str
+
+
+class Message(BaseModel):
+    '''class to send a message'''
+    content: str
+    receiver = str
