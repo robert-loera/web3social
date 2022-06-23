@@ -13,15 +13,14 @@ jobs:
       SECRET_KEY: ${{secrets.SECRET_KEY}}
       ALGORITHM: ${{secrets.ALGORITHM}}
       ACCESS_TOKEN_EXPIRE_MINUTES: ${{secrets.ACCESS_TOKEN_EXPIRE_MINUTES}}
-
+    # to test this we have to spin up a docker container to setup postgres
     services:
       postgres:
         image: postgres
         env:
           POSTGRES_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
           POSTGRES_DB: ${{secrets.DATABASE_NAME}}_test
-        ports:
-          - 5432:5432
+        ports: -5432:5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
