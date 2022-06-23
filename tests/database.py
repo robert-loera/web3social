@@ -14,7 +14,7 @@ from app.database import get_db, Base
 SQLALCHEMY_DATABASE_URL = 'postgresql://postgres:loera007@localhost:5432/web3social_test'
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
-
+#
 TestingSessionLocal = sessionmaker(
     autocommit=False, autoflush=False, bind=engine)
 
